@@ -12,7 +12,8 @@ class Reports(commands.Cog):
 			repmessage = await ctx.channel.fetch_message(ctx.message.reference.message_id); ch=ctx.guild.get_channel(808403507069059132)
 			if repmessage.author.id == ctx.author.id: await ctx.author.send("You cant report yourself!"); await ctx.message.delete()
 			else:
-				repsel=[Select(custom_id = "repsel", placeholder="Please select a report reason",min_values=1,max_values=4,options=[SelectOption(emoji="🤬", label="Swearing/Bad Language", value="S"),SelectOption(emoji="🔞", label="NSFW/Gore", value="N"),SelectOption(emoji="⚠️", label="Toxicity",value="T"),SelectOption(emoji="♻️", label="Repost/Stolen",value="R"),SelectOption(emoji="🥩", label="Spam/Chat Flood", value="F"),SelectOption(emoji="😡", label="Racism/Sexism", value="R")])];message = await ctx.send(content = f"Reporting {repmessage.author} \nPlease select a reason!", components=repsel)
+				repsel=[Select(custom_id = "repsel", placeholder="Please select a report reason",min_values=1,max_values=4,options=[SelectOption(emoji="🤬", label="Swearing/Bad Language", value="S"),SelectOption(emoji="🔞", label="NSFW/Gore", value="N"),SelectOption(emoji="⚠️", label="Toxicity",value="T"),SelectOption(emoji="♻️", label="Repost/Stolen",value="R"),SelectOption(emoji="🥩", label="Spam/Chat Flood", value="F"),SelectOption(emoji="😡", label="Racism/Sexism", value="B")])]
+				message = await ctx.send(content = f"Reporting {repmessage.author} \nPlease select a reason!", components=repsel)
 				def check(res):return res.user.id == ctx.author.id and res.channel.id == ctx.channel.id and res.message.id==message.id
 				try: interaction = await self.bot.wait_for('select_option',check=check,timeout=30)
 				except asyncio.TimeoutError: await message.delete(); await ctx.message.delete(); return await ctx.author.send(content='Timed out!')	
@@ -26,7 +27,7 @@ class Reports(commands.Cog):
 					if "T" in interaction.values: repcat += "⚠️ Toxicity    "
 					if "R" in interaction.values: repcat += "♻️ Repost/Stolen    "
 					if "F" in interaction.values: repcat += "🥩 Spam/Chat Flood    "
-					if "R" in interaction.values: repcat += "😡 Racism/Sexism"
+					if "B" in interaction.values: repcat += "😡 Racism/Sexism"
 					try:imgs=repmessage.attachments[0].url; print(imgs)
 					except IndexError:imgs=None
 					await conin.send("Sending report!"); await message.delete(); modsel=[[Button(emoji="✅", label="No Action",style=ButtonStyle.green, custom_id='f'),Button(emoji='⛔', label="Delete and Warn", style=ButtonStyle.red, custom_id='w'),Button(emoji="🗑️",label="Delete",style=ButtonStyle.blue, custom_id="d")]];await ctx.message.delete()
