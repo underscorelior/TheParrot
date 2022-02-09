@@ -42,5 +42,4 @@ class Reports(commands.Cog):
 						for row in modsel: row.disable_components();await repmods.edit(content=f"Deleted and Warned. \nActioned by {repmodct.author}",components=modsel);await ctx.author.send("Your report has been dealt with.");await repmessage.delete();await repmessage.author.send(f"Your post in <#{repmessage.channel.id}> has been deleted for: \n{repcat}")
 				else: await conin.send("Cancelling report."); await message.delete(); await ctx.message.delete()
 		except AttributeError: await ctx.author.send("Please \"reply\" to another users message.");await ctx.message.delete()
-def setup(bot):
-	bot.add_cog(Reports(bot))
+def setup(bot): bot.add_cog(Reports(bot))
