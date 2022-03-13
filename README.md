@@ -9,3 +9,4 @@ A feature packed reporting system, with mod approval.
 ## Libraries
 - discord.py v1.7.3
 - discord-py-slash-commands
+- discord-components
