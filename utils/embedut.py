@@ -1,199 +1,94 @@
-import discord, asyncio
-from discord.ext import commands
-from discord_components import Button, ButtonStyle, Select, SelectOption
+import discord
+from datetime import datetime
 from discord.errors import HTTPException
 
 
-class Reports(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        self.ctx: commands.Context
+async def infoembed(message, channel, guild):
+    user, urol = guild.get_member(message.author.id), ""
+    if str(user.color) == "#000000":
+        clr = 0x1AFFCF
+    else:
+        clr = int(hex(int((str(user.color)).replace("#", ""), 16)), 0)
+    if not user.nick:
+        unick = f"{user.name} (No nick set)"
+    if user.nick:
+        unick = user.nick
+    if user.roles is not None:
+        for role in user.roles[1:]:
+            urol = role.mention + " " + urol
+    else:
+        urol = "None"
+    uinfemb = (
+        discord.Embed(
+            title=f"{user.name}",
+            description=f"ID: {user.id}",
+            color=clr,
+            timestamp=datetime.utcnow(),
+        )
+        .set_thumbnail(url=user.avatar_url)
+        .set_footer(text=user.id)
+        .add_field(
+            name="General",
+            value=f"Nickname: {unick} \nDiscriminator: #{user.discriminator} **‖** Mention: {user.mention}",
+        )
+        .add_field(name="Server", value=f"Roles: {urol}", inline=False)
+        .add_field(
+            name="Other",
+            value=f"Account Created: <t:{str((user.created_at).timestamp()).split('.')[0]}:F> (<t:{str((user.created_at).timestamp()).split('.')[0]}:R>) \nJoined Server At: <t:{str((user.joined_at).timestamp()).split('.')[0]}:F> (<t:{str((user.joined_at).timestamp()).split('.')[0]}:R>)",
+            inline=False,
+        )
+    )
+    info = await channel.send(
+        content=f"<@&914983221215772713> \n> ID: {user.id} Mention: {user.mention}",
+        embed=uinfemb,
+    )
+    await info.pin()
 
-    @commands.command(aliases=["r"])
-    async def report(self, ctx):
-        try:
-            repmessage = await ctx.channel.fetch_message(
-                ctx.message.reference.message_id
+
+async def userembed(user, message, channel):
+    try:
+        imgs = message.attachments[0].url
+        embed = (
+            discord.Embed(
+                title=message.content, color=0x35D47A, timestamp=message.created_at
             )
-            ch = ctx.guild.get_channel(808403507069059132)
-            if repmessage.author.id == ctx.author.id:
-                await ctx.author.send("You cant report yourself!")
-                await ctx.message.delete()
-            else:
-                repsel = [
-                    Select(
-                        custom_id="repsel",
-                        placeholder="Please select a report reason",
-                        min_values=1,
-                        max_values=4,
-                        options=[
-                            SelectOption(
-                                emoji="🤬", label="Swearing/Bad Language", value="S"
-                            ),
-                            SelectOption(emoji="🔞", label="NSFW/Gore", value="N"),
-                            SelectOption(emoji="⚠️", label="Toxicity", value="T"),
-                            SelectOption(emoji="♻️", label="Repost/Stolen", value="R"),
-                            SelectOption(emoji="🥩", label="Spam/Chat Flood", value="F"),
-                            SelectOption(emoji="😡", label="Racism/Sexism", value="B"),
-                        ],
-                    )
-                ]
-                message = await ctx.send(
-                    content=f"Reporting {repmessage.author} \nPlease select a reason!",
-                    components=repsel,
-                )
-
-                def check(res):
-                    return (
-                        res.user.id == ctx.author.id
-                        and res.channel.id == ctx.channel.id
-                        and res.message.id == message.id
-                    )
-
-                try:
-                    interaction = await self.bot.wait_for(
-                        "select_option", check=check, timeout=30
-                    )
-                except asyncio.TimeoutError:
-                    await message.delete()
-                    await ctx.message.delete()
-                    return await ctx.author.send(content="Timed out!")
-                repcon = [
-                    [
-                        Button(emoji="✅", style=ButtonStyle.green, custom_id="y"),
-                        Button(emoji="⛔", style=ButtonStyle.red, custom_id="n"),
-                    ]
-                ]
-                await message.edit(
-                    content="Are you sure you want to submit the report?",
-                    components=repcon,
-                )
-                try:
-                    conin = await self.bot.wait_for(
-                        "button_click",
-                        check=lambda inter: inter.message.id == message.id,
-                        timeout=30,
-                    )
-                except asyncio.TimeoutError:
-                    await message.delete()
-                    await ctx.message.delete()
-                    return await ctx.author.send(content="Timed out!")
-                if conin.custom_id == "y":
-                    repcat = ""
-                    if "S" in interaction.values:
-                        repcat += "🤬 Swearing/Bad Language    "
-                    if "N" in interaction.values:
-                        repcat += "🔞 NSFW/GORE    "
-                    if "T" in interaction.values:
-                        repcat += "⚠️ Toxicity    "
-                    if "R" in interaction.values:
-                        repcat += "♻️ Repost/Stolen    "
-                    if "F" in interaction.values:
-                        repcat += "🥩 Spam/Chat Flood    "
-                    if "B" in interaction.values:
-                        repcat += "😡 Racism/Sexism"
-                    try:
-                        imgs = repmessage.attachments[0].url
-                        print(imgs)
-                    except IndexError:
-                        imgs = None
-                    await conin.send("Sending report!")
-                    await message.delete()
-                    modsel = [
-                        [
-                            Button(
-                                emoji="✅",
-                                label="No Action",
-                                style=ButtonStyle.green,
-                                custom_id="f",
-                            ),
-                            Button(
-                                emoji="⛔",
-                                label="Delete and Warn",
-                                style=ButtonStyle.red,
-                                custom_id="w",
-                            ),
-                            Button(
-                                emoji="🗑️",
-                                label="Delete",
-                                style=ButtonStyle.blue,
-                                custom_id="d",
-                            ),
-                        ]
-                    ]
-                    await ctx.message.delete()
-                    try:
-                        embed = (
-                            discord.Embed(
-                                title=f"{repmessage.author} was reported!",
-                                description=repmessage.content,
-                                color=0xD42121,
-                                url=repmessage.jump_url,
-                            )
-                            .set_image(url=imgs)
-                            .set_author(
-                                name=f"Reported by {ctx.author}",
-                                icon_url=ctx.author.avatar_url,
-                            )
-                            .set_footer(text=f"Report categories: {repcat}")
-                        )
-                        repmods = await ch.send(embed=embed, components=modsel)
-                    except HTTPException:
-                        embed = (
-                            discord.Embed(
-                                title=f"{repmessage.author} was reported!",
-                                description=repmessage.content,
-                                color=0xD42121,
-                                url=repmessage.jump_url,
-                            )
-                            .set_author(
-                                name=f"Reported by {ctx.author}",
-                                icon_url=ctx.author.avatar_url,
-                            )
-                            .set_footer(text=f"Report categories: {repcat}")
-                        )
-                        repmods = await ch.send(embed=embed, components=modsel)
-                    repmodct = await self.bot.wait_for(
-                        "button_click",
-                        check=lambda inter: inter.message.id == repmods.id,
-                    )
-                    if repmodct.custom_id == "d":
-                        for row in modsel:
-                            row.disable_components()
-                            await repmods.edit(
-                                content=f"Message deleted. \nActioned by {repmodct.author}",
-                                components=modsel,
-                            )
-                            await repmessage.delete()
-                            await ctx.author.send("Your report has been dealt with.")
-                    if repmodct.custom_id == "f":
-                        for row in modsel:
-                            row.disable_components()
-                            await repmods.edit(
-                                content=f"No Action. \nActioned by {repmodct.author}",
-                                components=modsel,
-                            )
-                            await ctx.author.send("Your report has been dealt with.")
-                    if repmodct.custom_id == "w":
-                        for row in modsel:
-                            row.disable_components()
-                            await repmods.edit(
-                                content=f"Deleted and Warned. \nActioned by {repmodct.author}",
-                                components=modsel,
-                            )
-                            await ctx.author.send("Your report has been dealt with.")
-                            await repmessage.delete()
-                            await repmessage.author.send(
-                                f"Your post in <#{repmessage.channel.id}> has been deleted for: \n{repcat}"
-                            )
-                else:
-                    await conin.send("Cancelling report.")
-                    await message.delete()
-                    await ctx.message.delete()
-        except AttributeError:
-            await ctx.author.send('Please "reply" to another users message.')
-            await ctx.message.delete()
+            .set_author(name=str(user), icon_url=user.avatar_url)
+            .set_footer(text="Id: {}".format(user.id))
+            .set_image(url=imgs)
+        )
+        await channel.send(embed=embed)
+    except IndexError:
+        imgs = None
+        embed = (
+            discord.Embed(
+                title=message.content, color=0x35D47A, timestamp=message.created_at
+            )
+            .set_author(name=str(user), icon_url=user.avatar_url)
+            .set_footer(text="Id: {}".format(user.id))
+        )
+        await channel.send(embed=embed)
+    await message.add_reaction("✅")
 
 
-def setup(bot):
-    bot.add_cog(Reports(bot))
+async def waitembed(user, message):
+    embed = discord.Embed(
+        title="Thank you for contacting The Parrot! Please state your inquiry if you haven't already, and a member of our moderation team will be with you shortly.",
+        color=0xC12FED,
+        timestamp=message.created_at,
+    ).set_author(
+        name="The Bread Pirate's Ship",
+        icon_url="https://cdn.discordapp.com/attachments/808448077614415882/837336840272609290/Better_bread_server.gif",
+    )
+    await user.send(embed=embed)
+
+
+async def modembed(ctx, user, msg, message):
+    embed = discord.Embed(
+        title=msg, color=0x34A4EB, timestamp=message.created_at
+    ).set_author(
+        name="The Bread Pirate's Ship",
+        icon_url="https://cdn.discordapp.com/attachments/808448077614415882/837336840272609290/Better_bread_server.gif",
+    )
+    await user.send(embed=embed)
+    await message.delete()
+    await ctx.send(content=f"Sent by {message.author}", embed=embed)

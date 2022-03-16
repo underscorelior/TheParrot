@@ -11,7 +11,7 @@ bot = commands.Bot(
     command_prefix=["p-", "P-"],
     intents=discord.Intents.all(),
     status=discord.Status.idle,
-    activity=discord.Watching(name="The Bread Pirate eating crackers.")
+    activity=discord.Game(name="With The Bread Pirate's crackers.")
 )
 
 
