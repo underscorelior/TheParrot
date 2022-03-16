@@ -116,5 +116,3 @@ config.toml
 *.exe
 test.py
 web_screenshot.png 
-eval.py
-cogs/eval.py
