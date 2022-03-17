@@ -16,11 +16,11 @@ class Countries(commands.Cog):
 	def cog_unload(self):
 		self.countries.cancel()
 	#after winner, add message for til next round
-	@tasks.loop(seconds=35)
+	@tasks.loop(seconds=15)
 	async def countries(self):
 		t = random.randint(1,2)
 		guild=self.bot.get_guild(722086066596741144)
-		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 35 seconds!"))
+		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds!"))
 		async with aiohttp.ClientSession() as session: 
 			async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
 		quizans=data[random.randint(0,len(data))]
@@ -35,7 +35,7 @@ class Countries(commands.Cog):
 		def check(message : discord.Message) -> bool: 
 			return message.channel == channel and message.author != self.bot and message.content.lower() == quizans[t].lower()
 		try:
-			message = await self.bot.wait_for('message', timeout = 30.5, check = check)
+			message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 		except asyncio.TimeoutError: 
 			if t == "capital": 
 				await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'What is the capital of `{quizans["name"]}:` \nReal Answer: `{quizans["capital"]}`',color=0xfa8e23, timestamp = datetime.utcnow()))
