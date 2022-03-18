@@ -60,7 +60,7 @@ class Countries(commands.Cog):
 			else:
 				msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
-			if t == 1: t="capital"
+			if t == 1: t="capital"; qex=quizans["capital"]
 			else: 
 				t="name"
 				if quizans["name"] == "United States": qex="usa"
@@ -76,7 +76,7 @@ class Countries(commands.Cog):
 				
 
 			def check(message : discord.Message) -> bool: 
-				return message.channel == channel and message.author != self.bot or message.content.lower() == quizans[t].lower() or message.content.lower() == qex
+				return message.channel == channel and message.author != self.bot and (message.content.lower() == quizans[t].lower() or message.content.lower() == qex)
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
