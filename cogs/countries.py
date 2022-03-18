@@ -53,17 +53,29 @@ class Countries(commands.Cog):
 			t = random.randint(1,2)
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
-			quizans=data[random.randint(0,len(data))]
-			if not quizans: quizans=data[random.randint(0,len(data))]
+			quizans=data[random.randint(0,len(data))].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
 			if t == 1:
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 			else:
 				msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
 			if t == 1: t="capital"
-			else: t="name"
+			else: 
+				t="name"
+				if quizans["name"] == "United States": qex="usa"
+				elif quizans["name"] == "United Arab Emirates": qex="uae"
+				elif quizans["name"] == "United Kingdom": qex="uk"
+				elif quizans["name"] == "Afghanistan": qex="taliban"
+				elif quizans["name"] == "Taiwan": qex="prc"
+				elif quizans["name"] == "North Korea": qex="nk"
+				elif quizans["name"] == "South Korea": qex="sk"
+				elif quizans["name"] == "Republic of the Congo": qex="roc"
+				elif quizans["name"] == "Dominican Republic": qex="dr"
+				else: qex=quizans["name"]
+				
+
 			def check(message : discord.Message) -> bool: 
-				return message.channel == channel and message.author != self.bot and message.content.lower() == quizans[t].lower()
+				return message.channel == channel and message.author != self.bot or message.content.lower() == quizans[t].lower() or message.content.lower() == qex
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
@@ -71,8 +83,7 @@ class Countries(commands.Cog):
 					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'What is the capital of `{quizans["name"]}:` \nReal Answer: `{quizans["capital"]}`',color=0xfa8e23, timestamp = datetime.utcnow()))
 				else:
 					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which country does this flag belong to?: \nReal Answer: `{quizans["name"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
-			
-			
+
 			else: 
 				with open('lb.json', 'r+') as f:
 					data = json.load(f)
