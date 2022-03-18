@@ -19,7 +19,7 @@ class Countries(commands.Cog):
 		self.bot = bot
 		self.countries.start()
 	
-	@commands.command()
+	@commands.command(aliases=["lb"])
 	async def leaderboard(self,ctx):
 		guild=self.bot.get_guild(722086066596741144)
 		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds! https://github.com/underscorelior/TheParrot"))
@@ -56,21 +56,18 @@ class Countries(commands.Cog):
 			quizans=data[random.randint(0,len(data))]
 			if not quizans: quizans=data[random.randint(0,len(data))]
 			if t == 1:
-				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
+				qtype = f'What is the capital of `{quizans["name"]}`:'
+				jtype = "capital"
 			else:
-				msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
-			em = await channel.send(embed=msem)	
-			if t == 1: t="capital"
-			else: t="name"
+				qtype = f'Which country does this flag belong to?'
+				jtype = "name"
+			em = await channel.send(embed=discord.Embed(title=qtype,color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"]))	
 			def check(message : discord.Message) -> bool: 
 				return message.channel == channel and message.author != self.bot and message.content.lower() == quizans[t].lower()
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
-				if t == "capital": 
-					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'What is the capital of `{quizans["name"]}:` \nReal Answer: `{quizans["capital"]}`',color=0xfa8e23, timestamp = datetime.utcnow()))
-				else:
-					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which country does this flag belong to?: \nReal Answer: `{quizans["name"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
+				await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'{qtype} \nReal Answer: `{quizans[jtype]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
 			
 			
 			else: 
@@ -84,8 +81,7 @@ class Countries(commands.Cog):
 					_save()
 				totals=amounts[str(message.author.id)]
 				await message.add_reaction("✅")
-				if t == "capital": await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
-				else: await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
+				await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'{qtype} \nReal Answer: `{quizans[jtype]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
 			finally: 
 				print("Done")
 
