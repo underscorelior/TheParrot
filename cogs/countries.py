@@ -29,7 +29,7 @@ class Countries(commands.Cog):
 			top_users = {k: v for k, v in sorted(data.items(), key=lambda item: item[1], reverse=True)}
 			names = ''
 			for postion, user in enumerate(top_users):
-				names += f'{postion+1} - <@!{user}> with {top_users[user]}\n'
+				names += f'{postion+1} - <@!{user}> | {top_users[user]}\n'
 			embed = discord.Embed(title="Leaderboard")
 			embed.add_field(name="Names", value=names, inline=False)
 			await ctx.send(embed=embed)
