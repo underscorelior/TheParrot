@@ -21,15 +21,18 @@ class Countries(commands.Cog):
 	
 	@commands.command()
 	async def leaderboard(self,ctx):
-		with open('lb.json', 'r') as f:
-			data = json.load(f)
-		top_users = {k: v for k, v in sorted(data.items(), key=lambda item: item[1], reverse=True)}
-		names = ''
-		for postion, user in enumerate(top_users):
-			names += f'{postion+1} - <@!{user}> with {top_users[user]}\n'
-		embed = discord.Embed(title="Leaderboard")
-		embed.add_field(name="Names", value=names, inline=False)
-		await ctx.send(embed=embed)
+		guild=self.bot.get_guild(722086066596741144)
+		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds! https://github.com/underscorelior/TheParrot"))
+		if channel.id == ctx.channel.id:
+			with open('lb.json', 'r') as f:
+				data = json.load(f)
+			top_users = {k: v for k, v in sorted(data.items(), key=lambda item: item[1], reverse=True)}
+			names = ''
+			for postion, user in enumerate(top_users):
+				names += f'{postion+1} - <@!{user}> with {top_users[user]}\n'
+			embed = discord.Embed(title="Leaderboard")
+			embed.add_field(name="Names", value=names, inline=False)
+			await ctx.send(embed=embed)
 
 	def cog_unload(self):
 		self.countries.cancel()
@@ -37,7 +40,7 @@ class Countries(commands.Cog):
 	@tasks.loop(seconds=15)
 	async def countries(self):
 		guild=self.bot.get_guild(722086066596741144)
-		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds!"))
+		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds! https://github.com/underscorelior/TheParrot"))
 		async for message in channel.history(limit=100,oldest_first=False):
 			if message.author.id == 808400358317490236:
 				print("No")
@@ -48,7 +51,6 @@ class Countries(commands.Cog):
 			print("No one \n"+str(x-datetime.utcnow().timestamp()))
 		else:
 			t = random.randint(1,2)
-			channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds!"))
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
 			quizans=data[random.randint(0,len(data))]
@@ -85,7 +87,7 @@ class Countries(commands.Cog):
 				else: await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {data[str(message.author.id)]+1} point(s)!"))
 			finally: 
 				print("Done")
-				
+
 	@countries.before_loop
 	async def before_countries(self):
 		print('Starting')
