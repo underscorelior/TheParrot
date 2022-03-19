@@ -85,6 +85,8 @@ class Countries(commands.Cog):
 				elif quizans["name"] == "Bosnia and Herzegovina": qex="bh"
 				elif quizans["name"] == "Saint Kitts and Nevis": qex="skn"
 				elif quizans["name"] == "São Tomé and Príncipe": qex="stp"
+				elif quizans["name"] == "Central African Republic": qex="car"
+				elif quizans["name"] == "Iceland": qex="ridk"
 				else: qex=nnfixed
 			qqqq = quizans[t].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
 			def check(message : discord.Message) -> bool: 
