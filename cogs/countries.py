@@ -56,7 +56,6 @@ class Countries(commands.Cog):
 			quizans=data[random.randint(0,len(data))]
 			ccfixed = quizans["capital"].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
 			nnfixed = quizans.replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
-			
 			if t == 1:
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 			else:
