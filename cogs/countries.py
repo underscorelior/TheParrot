@@ -54,8 +54,8 @@ class Countries(commands.Cog):
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
 			quizans=data[random.randint(0,len(data))]
-			ccfixed = quizans["capital"].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
-			nnfixed = quizans["name"].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
+			ccfixed = quizans["capital"].replace("-","").replace("'","").replace(",","").replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
+			nnfixed = quizans["name"].replace("-","").replace("'","").replace(",","").replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
 			if t == 1:
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 			else:
