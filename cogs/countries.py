@@ -53,7 +53,7 @@ class Countries(commands.Cog):
 			t = random.randint(1,2)
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
-			quizans=data[random.randint(0,len(data))]
+			quizans=data[random.randint(0,len(data)-1)]
 			ccfixed = quizans["capital"].replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
 			nnfixed = quizans["name"].replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
 			if t == 1:
