@@ -6,6 +6,7 @@ import discord
 from datetime import datetime
 import asyncio
 import json
+import unidecode
 global amounts
 try:
 	print("Successfully loaded amounts.json")
@@ -55,8 +56,8 @@ class Countries(commands.Cog):
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
 			quizans=data[random.randint(0,len(data)-1)]
-			ccfixed = quizans["capital"].replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
-			nnfixed = quizans["name"].replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
+			ccfixed = unidecode.unidecode(quizans["capital"])
+			nnfixed = unidecode.unidecode(quizans["name"])
 			if t == 1:
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 			else:
@@ -75,6 +76,7 @@ class Countries(commands.Cog):
 				elif quizans["name"] == "Taiwan": qex="prc"
 				elif quizans["name"] == "North Korea": qex="nk"
 				elif quizans["name"] == "South Korea": qex="sk"
+				elif quizans["name"] == "New Zealand": qex="nz"
 				elif quizans["name"] == "Republic of the Congo": qex="roc"
 				elif quizans["name"] == "DR Congo": qex="drc"
 				elif quizans["name"] == "Dominican Republic": qex="dr"
@@ -87,12 +89,11 @@ class Countries(commands.Cog):
 				elif quizans["name"] == "Saint Kitts and Nevis": qex="skn"
 				elif quizans["name"] == "São Tomé and Príncipe": qex="stp"
 				elif quizans["name"] == "Central African Republic": qex="car"
-				elif quizans["name"] == "Iceland": qex="ridk"
 				elif quizans["name"] == "Porto-Novo": qex="pn"
 				elif quizans["name"] == "Guinea-Bissau": qex="gb"
 				elif quizans["name"] == "Timor-Leste": qex="tl"
 				else: qex=nnfixed
-			qqqq = quizans[t].replace("-","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
+			qqqq = unidecode.unidecode(quizans[t])
 			def check(message : discord.Message) -> bool: 
 				return message.channel == channel and message.author != self.bot and (message.content.lower() == qqqq.lower() or message.content.lower() == qex)
 			try:
