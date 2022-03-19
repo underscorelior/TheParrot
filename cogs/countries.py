@@ -61,7 +61,10 @@ class Countries(commands.Cog):
 			else:
 				msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
-			if t == 1: t="capital"; qex=ccfixed
+			if t == 1: 
+				t="capital"
+				if quizans["capital"] == "City of San Marino": qex="San Marino"
+				else: qex=ccfixed
 			else: 
 				t="name"
 				if quizans["name"] == "United States": qex="usa"
@@ -72,14 +75,19 @@ class Countries(commands.Cog):
 				elif quizans["name"] == "North Korea": qex="nk"
 				elif quizans["name"] == "South Korea": qex="sk"
 				elif quizans["name"] == "Republic of the Congo": qex="roc"
+				elif quizans["name"] == "DR Congo": qex="drc"
 				elif quizans["name"] == "Dominican Republic": qex="dr"
 				elif quizans["name"] == "Saint Vincent and the Grenadines": qex="svg"
 				elif quizans["name"] == "Papua New Guinea": qex="png"
-				
+				elif quizans["name"] == "Antigua and Barbuda": qex="ab"
+				elif quizans["name"] == "Sierra Leone": qex="sl"
+				elif quizans["name"] == "Trinidad and Tobago": qex="tt"
+				elif quizans["name"] == "Bosnia and Herzegovina": qex="bh"
+				elif quizans["name"] == "Saint Kitts and Nevis": qex="skn"
 				else: qex=nnfixed
 			qqqq = quizans[t].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
 			def check(message : discord.Message) -> bool: 
-				return message.channel == channel and message.author != self.bot and (message.content.lower() == qqqq.lower() or message.content.lower() == qex)
+				return message.channel == channel and message.author != self.bot and (message.content.lower().replace(".","").replace("?","").replace("!","") == qqqq.lower() or message.content.lower() == qex)
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
