@@ -54,13 +54,15 @@ class Countries(commands.Cog):
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
 			quizans=data[random.randint(0,len(data))]
-			# quizansfixed = quizans.replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
+			ccfixed = quizans["capital"].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
+			nnfixed = quizans.replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
+			
 			if t == 1:
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 			else:
 				msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
-			if t == 1: t="capital"; qex=quizans["capital"]
+			if t == 1: t="capital"; qex=ccfixed
 			else: 
 				t="name"
 				if quizans["name"] == "United States": qex="usa"
@@ -72,11 +74,13 @@ class Countries(commands.Cog):
 				elif quizans["name"] == "South Korea": qex="sk"
 				elif quizans["name"] == "Republic of the Congo": qex="roc"
 				elif quizans["name"] == "Dominican Republic": qex="dr"
-				else: qex=quizans["name"]
+				elif quizans["name"] == "Saint Vincent and the Grenadines": qex="svg"
+				elif quizans["name"] == "Papua New Guinea": qex="png"
 				
-
+				else: qex=nnfixed
+			qqqq = quizans[t].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
 			def check(message : discord.Message) -> bool: 
-				return message.channel == channel and message.author != self.bot and (message.content.lower() == quizans[t].lower() or message.content.lower() == qex)
+				return message.channel == channel and message.author != self.bot and (message.content.lower() == qqqq.lower() or message.content.lower() == qex)
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
