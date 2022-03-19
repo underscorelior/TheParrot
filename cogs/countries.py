@@ -54,8 +54,8 @@ class Countries(commands.Cog):
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
 			quizans=data[random.randint(0,len(data))]
-			ccfixed = quizans["capital"].replace("-","").replace("'","").replace(",","").replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
-			nnfixed = quizans["name"].replace("-","").replace("'","").replace(",","").replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
+			ccfixed = quizans["capital"].replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
+			nnfixed = quizans["name"].replace("ș","s").replace("é","e").replace("í","i").replace(".","").replace("á","a").replace("ó","o").replace("ã","a").replace("ș","s").replace("ă","a").replace("í","i").replace("ó","o")
 			if t == 1:
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 			else:
@@ -87,10 +87,13 @@ class Countries(commands.Cog):
 				elif quizans["name"] == "São Tomé and Príncipe": qex="stp"
 				elif quizans["name"] == "Central African Republic": qex="car"
 				elif quizans["name"] == "Iceland": qex="ridk"
+				elif quizans["name"] == "Porto-Novo": qex="pn"
+				elif quizans["name"] == "Guinea-Bissau": qex="gb"
+				elif quizans["name"] == "Timor-Leste": qex="tl"
 				else: qex=nnfixed
-			qqqq = quizans[t].replace("-","").replace("'","").replace(",","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
+			qqqq = quizans[t].replace("-","").replace("ș","").replace("é","").replace("í","").replace(".","").replace("á","").replace("ó","").replace("ã","").replace("ș","").replace("ă","").replace("í","").replace("ó","")
 			def check(message : discord.Message) -> bool: 
-				return message.channel == channel and message.author != self.bot and (message.content.lower().replace(".","").replace("?","").replace("!","") == qqqq.lower() or message.content.lower() == qex)
+				return message.channel == channel and message.author != self.bot and (message.content.lower() == qqqq.lower() or message.content.lower() == qex)
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
