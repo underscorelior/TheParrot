@@ -48,6 +48,7 @@ class Countries(commands.Cog):
 				x= message.created_at.timestamp()
 				break
 		if (x-datetime.utcnow().timestamp()) <= -200:
+			
 			print("No one \n"+str(x-datetime.utcnow().timestamp()))
 		else:
 			t = random.randint(1,2)
