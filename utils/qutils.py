@@ -58,29 +58,29 @@ async def losebtn(chans, rans):
 
     return btnls,chans,rans
 
-async def checkans(data, ansloc, quizans, type):
+async def checkans(data, ansloc, quizans, t):
 	x=True
 	while x is True:
 		if ansloc == 1:
-			qa = quizans[type]
-			qb = data[random.randint(0,len(data))][type]
-			qc = data[random.randint(0,len(data))][type]
-			qd = data[random.randint(0,len(data))][type]
+			qa = quizans[t]
+			qb = data[random.randint(0,len(data))][t]
+			qc = data[random.randint(0,len(data))][t]
+			qd = data[random.randint(0,len(data))][t]
 		if ansloc == 2:
-			qa = data[random.randint(0,len(data))][type]
-			qb = quizans[type]
-			qc = data[random.randint(0,len(data))][type]
-			qd = data[random.randint(0,len(data))][type]
+			qa = data[random.randint(0,len(data))][t]
+			qb = quizans[t]
+			qc = data[random.randint(0,len(data))][t]
+			qd = data[random.randint(0,len(data))][t]
 		if ansloc == 3: 
-			qa = data[random.randint(0,len(data))][type]
-			qb = data[random.randint(0,len(data))][type]
-			qc = quizans[type]
-			qd = data[random.randint(0,len(data))][type]
+			qa = data[random.randint(0,len(data))][t]
+			qb = data[random.randint(0,len(data))][t]
+			qc = quizans[t]
+			qd = data[random.randint(0,len(data))][t]
 		if ansloc == 4: 
-			qa = data[random.randint(0,len(data))][type]
-			qb = data[random.randint(0,len(data))][type]
-			qc = data[random.randint(0,len(data))][type]
-			qd = quizans[type]
+			qa = data[random.randint(0,len(data))][t]
+			qb = data[random.randint(0,len(data))][t]
+			qc = data[random.randint(0,len(data))][t]
+			qd = quizans[t]
 		if qa == qb or qa == qc or qa== qb: x=True
 		else: x=False
 	return qa,qb,qc,qd
