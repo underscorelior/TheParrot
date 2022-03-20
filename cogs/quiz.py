@@ -7,6 +7,7 @@ import asyncio
 import json
 from discord.ext import commands
 from discord_components import Button, ButtonStyle
+global amounts
 try:
 	print("Successfully loaded lb.json")
 	with open('lb.json') as f:
@@ -40,12 +41,8 @@ class CountryQuiz(commands.Cog):
 			if int(ansch.custom_id) == ansloc:
 				with open('lb.json', 'r+') as f:
 					data = json.load(f)
-					if str(ctx.author.id) not in amounts.keys():
-						amounts[str(ctx.author.id)] = 1
-						_save()
-					else:
-						amounts[str(ctx.author.id)] += 1
-						_save()
+				amounts[str(ctx.author.id)] += 1
+				_save()
 				if qtype==1:await message.edit(embed=discord.Embed(title='Win',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url),components=await winbtn(ansloc))
 				else:await message.edit(embed=discord.Embed(title='Win',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url).set_thumbnail(url=quizans["flags"]),components=await winbtn(ansloc))
 			else:

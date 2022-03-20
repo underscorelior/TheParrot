@@ -114,6 +114,7 @@ class Countries(commands.Cog):
 					amounts[str(message.author.id)] += 1
 					_save()
 				totals=amounts[str(message.author.id)]
+
 				if totals==1000:
 					await message.author.send("""
 					```ansi
