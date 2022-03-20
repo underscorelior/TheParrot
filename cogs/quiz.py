@@ -47,11 +47,11 @@ class CountryQuiz(commands.Cog):
 						amounts[str(ctx.author.id)] += 1
 						_save()
 				if qtype==1:await message.edit(embed=discord.Embed(title='Win',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url),components=await winbtn(ansloc))
-				else:await message.edit(embed=discord.Embed(title='Win',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url).set_thumbnail(url=quizans["flag"]),components=await winbtn(ansloc))
+				else:await message.edit(embed=discord.Embed(title='Win',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url).set_thumbnail(url=quizans["flags"]),components=await winbtn(ansloc))
 			else:
 				qta = await losebtn(int(ansch.custom_id),ansloc)
 				if qtype==1:await message.edit(embed=discord.Embed(title='Lose',description=f'What is the capital of `{quizans["name"]}`: \nSelected Answer: `{btnans[0][qta[1]-1].label}` \nReal Answer: `{quizans["capital"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url),components=qta[0])
-				else:await message.edit(embed=discord.Embed(title='Lose',description=f'Which country does this flag belong to? \nSelected Answer: `{btnans[0][qta[1]-1].label}` \nReal Answer: `{quizans["name"]}``', color=0xfa8e23, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url).set_thumbnail(url=quizans["flag"]),components=await winbtn(ansloc))
+				else:await message.edit(embed=discord.Embed(title='Lose',description=f'Which country does this flag belong to? \nSelected Answer: `{btnans[0][qta[1]-1].label}` \nReal Answer: `{quizans["name"]}``', color=0xfa8e23, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url).set_thumbnail(url=quizans["flags"]),components=await winbtn(ansloc))
 
 def _save():
     with open('lb.json', 'w+') as f:
