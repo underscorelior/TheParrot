@@ -20,7 +20,7 @@ class CountryQuiz(commands.Cog):
 		self.bot: commands.Bot = bot
 	@commands.command(aliases=["q"])
 	async def quiz(self,ctx):
-		if ctx.channel.id == 954989125696618496:
+		if ctx.channel.id == 955169257711370280:
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
 			quizans=data[random.randint(0,len(data)-1)]

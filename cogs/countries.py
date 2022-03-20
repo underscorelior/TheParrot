@@ -119,7 +119,7 @@ class Countries(commands.Cog):
 				if totals==1000:
 					await message.author.send("""
 					```ansi
-					You are officially a [1;33m[1;40mnerd![0m You gain the [1;34m[1;40m@Oceanographer role[0m, and access to the the [1;32m[1;40mGeography Nerds[0m special chat which gives you access to on demand games of quizes.
+					You are officially a [1;33m[1;40mnerd![0m You gain the [1;34m[1;40m@Oceanographer role[0m, and access to the the [1;32m[1;40mGeography Nerds[0m special chat which gives you access to on demand games of quizes.	
 					[1;4;37m[1;41m(Please do not leak the Special chat if you do you will get removed, and your score will be wiped!)
 					```""")
 					await message.author.add_roles(role=guild.get_role(954556452087922730))
