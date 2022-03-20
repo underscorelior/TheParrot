@@ -22,13 +22,13 @@ class CountryQuiz(commands.Cog):
 	async def quiz(self,ctx):
 		if ctx.channel.id == 955169257711370280:
 			async with aiohttp.ClientSession() as session: 
-				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: f = await r.json()
-			quizans=f[random.randint(0,len(f)-1)]
+				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
+			quizans=data[random.randint(0,len(data)-1)]
 			ansloc = random.randint(1,4) 
 			qtype=random.randint(1,2)
 			if qtype==1:qt="capital"
 			else:qt="name"
-			ca=await checkans(f, ansloc, quizans, qt)
+			ca=await checkans(data, ansloc, quizans, qt)
 			btnans=[[Button(label=ca[0], emoji="🇦", style=ButtonStyle.blue, custom_id=1),Button(label=ca[1],emoji='🇧', style=ButtonStyle.blue, custom_id=2),Button(label=ca[2], emoji="🇨", style=ButtonStyle.blue, custom_id=3),Button(label=ca[3], emoji='🇩', style=ButtonStyle.blue, custom_id=4)]]
 			if qtype==1:msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow()).set_footer(text=ctx.author,icon_url=ctx.author.avatar_url)
 			else:msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"]).set_footer(text=ctx.author,icon_url=ctx.author.avatar_url)
@@ -39,10 +39,9 @@ class CountryQuiz(commands.Cog):
 				if qtype==1:return await message.edit(embed=await toembed(f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`'),components=[[Button(emoji="🇦",style=ButtonStyle.grey,disabled=True),Button(emoji='🇧',style=ButtonStyle.grey,disabled=True),Button(emoji="🇨",style=ButtonStyle.grey,disabled=True),Button(emoji='🇩',style=ButtonStyle.grey,disabled=True)]])
 				else:return await message.edit(embed=await toembedt(f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`',quizans["flags"]),components=[[Button(emoji="🇦",style=ButtonStyle.grey,disabled=True),Button(emoji='🇧',style=ButtonStyle.grey,disabled=True),Button(emoji="🇨",style=ButtonStyle.grey,disabled=True),Button(emoji='🇩',style=ButtonStyle.grey,disabled=True)]])
 			if int(ansch.custom_id) == ansloc:
-				global data
 				with open('lb.json', 'r+') as f:
 					data = json.load(f)
-				data[str(ctx.author.id)] += 1
+				amounts[str(ctx.author.id)] += 1
 				_save()
 				if qtype==1:await message.edit(embed=discord.Embed(title='Win',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url),components=await winbtn(ansloc))
 				else:await message.edit(embed=discord.Embed(title='Win',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_footer(text=f'{ctx.author} | {amounts[str(ctx.author.id)]} Point(s)',icon_url=ctx.author.avatar_url).set_thumbnail(url=quizans["flags"]),components=await winbtn(ansloc))
@@ -53,6 +52,6 @@ class CountryQuiz(commands.Cog):
 
 def _save():
     with open('lb.json', 'w+') as f:
-        json.dump(data, f)
+        json.dump(amounts, f)
 def setup(bot: commands.Bot):
 	bot.add_cog(CountryQuiz(bot))
