@@ -43,7 +43,7 @@ class Countries(commands.Cog):
 		guild=self.bot.get_guild(722086066596741144)
 		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds! https://github.com/underscorelior/TheParrot"))
 		async for message in channel.history(limit=100,oldest_first=False):
-			if message.author.id == 808400358317490236:
+			if message.author.id == 808400358317490236 or message.author.id == 954989125696618496:
 				print("No")
 			else:
 				x= message.created_at.timestamp()
