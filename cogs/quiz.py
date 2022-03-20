@@ -1,4 +1,4 @@
-from utils import winbtn, losebtn, checkans, toembed
+from utils import winbtn, losebtn, checkans, toembed, toembedt
 import discord
 import random
 import aiohttp
@@ -28,7 +28,7 @@ class CountryQuiz(commands.Cog):
 			ansloc = random.randint(1,4) 
 			qtype=random.randint(1,2)
 			if qtype==1:qt="capital"
-			else:qt="type"
+			else:qt="name"
 			ca=await checkans(data, ansloc, quizans, qt)
 			btnans=[[Button(label=ca[0], emoji="🇦", style=ButtonStyle.blue, custom_id=1),Button(label=ca[1],emoji='🇧', style=ButtonStyle.blue, custom_id=2),Button(label=ca[2], emoji="🇨", style=ButtonStyle.blue, custom_id=3),Button(label=ca[3], emoji='🇩', style=ButtonStyle.blue, custom_id=4)]]
 			if qtype==1:msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow()).set_footer(text=ctx.author,icon_url=ctx.author.avatar_url)
@@ -37,8 +37,8 @@ class CountryQuiz(commands.Cog):
 			try: 
 				ansch = await self.bot.wait_for('button_click',check=lambda inter: inter.message.id == message.id and inter.user.id == ctx.author.id,timeout=15)
 			except asyncio.TimeoutError: 
-				return await message.edit(embed=await toembed(f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`'),components=[[Button(emoji="🇦",style=ButtonStyle.grey,disabled=True),Button(emoji='🇧',style=ButtonStyle.grey,disabled=True),Button(emoji="🇨",style=ButtonStyle.grey,disabled=True),Button(emoji='🇩',style=ButtonStyle.grey,disabled=True)]])
-			
+				if qtype==1:return await message.edit(embed=await toembed(f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`'),components=[[Button(emoji="🇦",style=ButtonStyle.grey,disabled=True),Button(emoji='🇧',style=ButtonStyle.grey,disabled=True),Button(emoji="🇨",style=ButtonStyle.grey,disabled=True),Button(emoji='🇩',style=ButtonStyle.grey,disabled=True)]])
+				else:return await message.edit(embed=await toembedt(f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`',quizans["flags"]),components=[[Button(emoji="🇦",style=ButtonStyle.grey,disabled=True),Button(emoji='🇧',style=ButtonStyle.grey,disabled=True),Button(emoji="🇨",style=ButtonStyle.grey,disabled=True),Button(emoji='🇩',style=ButtonStyle.grey,disabled=True)]])
 			if int(ansch.custom_id) == ansloc:
 				with open('lb.json', 'r+') as f:
 					data = json.load(f)
