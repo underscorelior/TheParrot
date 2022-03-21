@@ -55,48 +55,48 @@ class Countries(commands.Cog):
 			t = random.randint(1,2)
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
+				async with session.get("https://komali.dev/bin/territories.json", ssl=False) as r: data += await r.json()
 			quizans=data[random.randint(0,len(data)-1)]
-			ccfixed = unidecode.unidecode(quizans["capital"])
+			ccfixed = quizans["capital"]
 			nnfixed = unidecode.unidecode(quizans["name"])
-			if t == 1:
+			if t == 1 and ccfixed:
+				t="capital"
+				if quizans["capital"] == "City of San Marino": 	quizans["capital"]=qex="San Marino"
+				else: qex=ccfixed
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
+				ccfixed = unidecode.unidecode(ccfixed)
 			else:
+				t = "name"
 				msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
-			if t == 1: 
-				t="capital"
-				if quizans["capital"] == "City of San Marino": qex="San Marino"
-				elif quizans["capital"] == "Washington, D.C.": qex="dc"
-				else: qex=ccfixed
-			else: 
-				t="name"
-				if quizans["name"] == "United States": qex="usa"
-				elif quizans["name"] == "United Arab Emirates": qex="uae"
-				elif quizans["name"] == "United Kingdom": qex="uk"
-				elif quizans["name"] == "Afghanistan": qex="taliban"
-				elif quizans["name"] == "Taiwan": qex="prc"
-				elif quizans["name"] == "North Korea": qex="nk"
-				elif quizans["name"] == "South Korea": qex="sk"
-				elif quizans["name"] == "New Zealand": qex="nz"
-				elif quizans["name"] == "Republic of the Congo": qex="roc"
-				elif quizans["name"] == "DR Congo": qex="drc"
-				elif quizans["name"] == "Dominican Republic": qex="dr"
-				elif quizans["name"] == "Saint Vincent and the Grenadines": qex="svg"
-				elif quizans["name"] == "Papua New Guinea": qex="png"
-				elif quizans["name"] == "Antigua and Barbuda": qex="ab"
-				elif quizans["name"] == "Sierra Leone": qex="sl"
-				elif quizans["name"] == "Trinidad and Tobago": qex="tt"
-				elif quizans["name"] == "Bosnia and Herzegovina": qex="bh"
-				elif quizans["name"] == "Saint Kitts and Nevis": qex="skn"
-				elif quizans["name"] == "São Tomé and Príncipe": qex="stp"
-				elif quizans["name"] == "Central African Republic": qex="car"
-				elif quizans["name"] == "Porto-Novo": qex="pn"
-				elif quizans["name"] == "Guinea-Bissau": qex="gb"
-				elif quizans["name"] == "Timor-Leste": qex="tl"
-				else: qex=nnfixed
-			qqqq = unidecode.unidecode(quizans[t])
+			qqqq = quizans[t]
 			def check(message : discord.Message) -> bool: 
-				return message.channel == channel and message.author != self.bot and (message.content.lower() == qqqq.lower() or message.content.lower() == qex)
+				message.content = sub(r"[\d\?\!./]",'',unidecode.unidecode(message.content).strip().lower())
+				if message.content == "usa": message.content = "United States" 
+				if message.content == "uae": message.content = "United Arab Emirates"
+				if message.content == "uk": message.content = "United Kingdom"
+				if message.content == "nk": message.content = "North Korea"
+				if message.content == "sk": message.content = "South Korea"
+				if message.content == "nz": message.content  = "New Zealand"
+				if message.content == "roc": message.content  = "Republic of the Congo"
+				if message.content == "drc": message.content  = "DR Congo"
+				if message.content == "dr": message.content  = "Dominican Republic"
+				if message.content == "svg": message.content  = "Saint Vincent and the Grenadines"
+				if message.content == "png": message.content  = "Papua New Guinea"
+				if message.content == "ab": message.content  = "Antigua and Barbuda"
+				if message.content == "sa": message.content  = "Saudi Arabia"
+				if message.content == "sl": message.content  = "Sierra Leone"
+				if message.content == "tt": message.content  = "Trinidad and Tobago"
+				if message.content == "bh": message.content  = "Bosnia and Herzegovina"
+				if message.content == "skn": message.content  = "Saint Kitts and Nevis"
+				if message.content == "stp": message.content  = "São Tomé and Príncipe"
+				if message.content == "car": message.content  = "Central African Republic"
+				if message.content == "gb": message.content  = "Guinea-Bissau"
+				if message.content == "tl": message.content  = "Timor-Leste"
+				if message.content == "nc": message.content  = "New Caledonia"
+				if message.content == "spm": message.content  = "Saint Pierre and Miquelon"
+				
+				return message.channel == channel and message.author != self.bot and (message.content.lower().replace("-", " ").replace("'", "") == qqqq.lower().replace("-", " ").replace("'", "") or message.content.lower() == qex)
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
