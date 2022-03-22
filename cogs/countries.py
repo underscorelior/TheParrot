@@ -68,8 +68,7 @@ class Countries(commands.Cog):
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 				ccfixed = unidecode(ccfixed)
 			else:
-				# if random.randint(1,17) == 7: 
-				if 7 == 7:
+				if random.randint(1,17) == 7: 
 					quizans=altdata[random.randint(0,len(altdata)-1)]
 					tc=1
 				else:tc=2
