@@ -7,6 +7,7 @@ from datetime import datetime
 import asyncio
 import json
 import unidecode
+from re import sub
 global amounts
 try:
 	print("Successfully loaded amounts.json")
@@ -55,7 +56,8 @@ class Countries(commands.Cog):
 			t = random.randint(1,2)
 			async with aiohttp.ClientSession() as session: 
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r: data = await r.json()
-				async with session.get("https://komali.dev/bin/territories.json", ssl=False) as r: data += await r.json()
+				async with session.get("https://komali.dev/bin/territories.json", ssl=False) as f: altdata = await f.json()
+			
 			quizans=data[random.randint(0,len(data)-1)]
 			ccfixed = quizans["capital"]
 			nnfixed = unidecode.unidecode(quizans["name"])
@@ -66,8 +68,12 @@ class Countries(commands.Cog):
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
 				ccfixed = unidecode.unidecode(ccfixed)
 			else:
+				if random.randint(1,7) == 7: 
+					quizans=altdata[random.randint(0,len(altdata)-1)]
+					tc=1
+				else:tc=2
 				t = "name"
-				msem = discord.Embed(title=f'Which {"country" if ccfixed else "territory"} does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
+				msem = discord.Embed(title=f'Which {"country" if tc==2 else "territory"} does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
 			qqqq = quizans[t]
 			def check(message : discord.Message) -> bool: 
@@ -77,26 +83,25 @@ class Countries(commands.Cog):
 				if content == "uk": content = "United Kingdom"
 				if content == "nk": content = "North Korea"
 				if content == "sk": content = "South Korea"
-				if content == "nz": content ==  "New Zealand"
-				if content == "roc": content ==  "Republic of the Congo"
-				if content == "drc": content ==  "DR Congo"
-				if content == "dr": content ==  "Dominican Republic"
-				if content == "svg": content ==  "Saint Vincent and the Grenadines"
-				if content == "png": content ==  "Papua New Guinea"
-				if content == "ab": content ==  "Antigua and Barbuda"
-				if content == "sa": content ==  "Saudi Arabia"
-				if content == "sl": content ==  "Sierra Leone"
-				if content == "tt": content ==  "Trinidad and Tobago"
-				if content == "bh": content ==  "Bosnia and Herzegovina"
-				if content == "skn": content ==  "Saint Kitts and Nevis"
-				if content == "stp": content ==  "São Tomé and Príncipe"
-				if content == "car": content ==  "Central African Republic"
-				if content == "gb": content ==  "Guinea-Bissau"
-				if content == "tl": content ==  "Timor-Leste"
-				if content == "nc": content ==  "New Caledonia"
-				if content == "spm": content ==  "Saint Pierre and Miquelon"
-				
-				return message.channel == channel and message.author != self.bot and (unidecode.unidecode(content).lower().replace("-", " ").replace("'", "") == unidecode.unidecode(qqqq).lower().replace("-", " ").replace("'", "") or unidecode.unidecode(content).lower() == unidecode.unidecode(qex))
+				if content == "nz": content =  "New Zealand"
+				if content == "roc": content =  "Republic of the Congo"
+				if content == "drc": content =  "DR Congo"
+				if content == "dr": content =  "Dominican Republic"
+				if content == "svg": content =  "Saint Vincent and the Grenadines"
+				if content == "png": content =  "Papua New Guinea"
+				if content == "ab": content =  "Antigua and Barbuda"
+				if content == "sa": content =  "Saudi Arabia"
+				if content == "sl": content =  "Sierra Leone"
+				if content == "tt": content =  "Trinidad and Tobago"
+				if content == "bh": content =  "Bosnia and Herzegovina"
+				if content == "skn": content =  "Saint Kitts and Nevis"
+				if content == "stp": content =  "São Tomé and Príncipe"
+				if content == "car": content =  "Central African Republic"
+				if content == "gb": content =  "Guinea-Bissau"
+				if content == "tl": content =  "Timor-Leste"
+				if content == "nc": content =  "New Caledonia"
+				if content == "spm": content =  "Saint Pierre and Miquelon"
+				return message.channel == channel and message.author != self.bot and (unidecode.unidecode(content).lower().replace("-", " ").replace("'", "") == unidecode.unidecode(qqqq).lower().replace("-", " ").replace("'", "")) #or unidecode.unidecode(content).lower() == unidecode.unidecode(qex))
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
@@ -118,20 +123,18 @@ class Countries(commands.Cog):
 
 				if totals==1000:
 					await message.author.send("""
-					```ansi
-					You are officially a [1;33m[1;40mnerd![0m You gain the [1;34m[1;40m@Oceanographer role[0m, and access to the the [1;32m[1;40mGeography Nerds[0m special chat which gives you access to on demand games of quizes.	
-					[1;4;37m[1;41m(Please do not leak the Special chat if you do you will get removed, and your score will be wiped!)
-					```""")
-					await message.author.add_roles(role=guild.get_role(954556452087922730))
+```ansi
+You are officially a [1;33m[1;40mnerd![0m You gain the [1;34m[1;40m@Oceanographer role[0m, and access to the the [1;32m[1;40mGeography Nerds[0m special chat which gives you access to on demand games of quizes.	
+[1;4;37m[1;41m(Please do not leak the Special chat if you do you will get removed, and your score will be wiped!)
+```""")
+					role=get(guild.roles, name="Oceanographers")
+					member = guild.get_member(message.author.id)
+					await member.add_roles(role)
 					await self.bot.get_channel(808448077614415882).send(f"New <@&954556452087922730>! \nGGs to {message.author.mention} for getting 1000 countries/flags correct!")
-					await message.add_reaction("✅")
-					if t == "capital": await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
-					else: await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
-				else:
-					await message.add_reaction("✅")
-					if t == "capital": await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
-					else: await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'Which country does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
-					
+				await message.add_reaction("✅")
+				if t == "capital": await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
+				else: await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'Which {"country" if tc==2 else "territory"} does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
+
 			finally: 
 				print("Done")
 
