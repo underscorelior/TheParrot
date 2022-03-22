@@ -67,43 +67,43 @@ class Countries(commands.Cog):
 				ccfixed = unidecode.unidecode(ccfixed)
 			else:
 				t = "name"
-				msem = discord.Embed(title=f'Which country does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
+				msem = discord.Embed(title=f'Which {"country" if ccfixed else "territory"} does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
 			qqqq = quizans[t]
 			def check(message : discord.Message) -> bool: 
-				message.content = sub(r"[\d\?\!./]",'',unidecode.unidecode(message.content).strip().lower())
-				if message.content == "usa": message.content = "United States" 
-				if message.content == "uae": message.content = "United Arab Emirates"
-				if message.content == "uk": message.content = "United Kingdom"
-				if message.content == "nk": message.content = "North Korea"
-				if message.content == "sk": message.content = "South Korea"
-				if message.content == "nz": message.content  = "New Zealand"
-				if message.content == "roc": message.content  = "Republic of the Congo"
-				if message.content == "drc": message.content  = "DR Congo"
-				if message.content == "dr": message.content  = "Dominican Republic"
-				if message.content == "svg": message.content  = "Saint Vincent and the Grenadines"
-				if message.content == "png": message.content  = "Papua New Guinea"
-				if message.content == "ab": message.content  = "Antigua and Barbuda"
-				if message.content == "sa": message.content  = "Saudi Arabia"
-				if message.content == "sl": message.content  = "Sierra Leone"
-				if message.content == "tt": message.content  = "Trinidad and Tobago"
-				if message.content == "bh": message.content  = "Bosnia and Herzegovina"
-				if message.content == "skn": message.content  = "Saint Kitts and Nevis"
-				if message.content == "stp": message.content  = "São Tomé and Príncipe"
-				if message.content == "car": message.content  = "Central African Republic"
-				if message.content == "gb": message.content  = "Guinea-Bissau"
-				if message.content == "tl": message.content  = "Timor-Leste"
-				if message.content == "nc": message.content  = "New Caledonia"
-				if message.content == "spm": message.content  = "Saint Pierre and Miquelon"
+				content = sub(r"[\d\?\!./]",'',unidecode.unidecode(message.content).strip().lower())
+				if content == "usa": content = "United States" 
+				if content == "uae": content = "United Arab Emirates"
+				if content == "uk": content = "United Kingdom"
+				if content == "nk": content = "North Korea"
+				if content == "sk": content = "South Korea"
+				if content == "nz": content ==  "New Zealand"
+				if content == "roc": content ==  "Republic of the Congo"
+				if content == "drc": content ==  "DR Congo"
+				if content == "dr": content ==  "Dominican Republic"
+				if content == "svg": content ==  "Saint Vincent and the Grenadines"
+				if content == "png": content ==  "Papua New Guinea"
+				if content == "ab": content ==  "Antigua and Barbuda"
+				if content == "sa": content ==  "Saudi Arabia"
+				if content == "sl": content ==  "Sierra Leone"
+				if content == "tt": content ==  "Trinidad and Tobago"
+				if content == "bh": content ==  "Bosnia and Herzegovina"
+				if content == "skn": content ==  "Saint Kitts and Nevis"
+				if content == "stp": content ==  "São Tomé and Príncipe"
+				if content == "car": content ==  "Central African Republic"
+				if content == "gb": content ==  "Guinea-Bissau"
+				if content == "tl": content ==  "Timor-Leste"
+				if content == "nc": content ==  "New Caledonia"
+				if content == "spm": content ==  "Saint Pierre and Miquelon"
 				
-				return message.channel == channel and message.author != self.bot and (message.content.lower().replace("-", " ").replace("'", "") == qqqq.lower().replace("-", " ").replace("'", "") or message.content.lower() == qex)
+				return message.channel == channel and message.author != self.bot and (unidecode.unidecode(content).lower().replace("-", " ").replace("'", "") == unidecode.unidecode(qqqq).lower().replace("-", " ").replace("'", "") or unidecode.unidecode(content).lower() == unidecode.unidecode(qex))
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
 				if t == "capital": 
 					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'What is the capital of `{quizans["name"]}:` \nReal Answer: `{quizans["capital"]}`',color=0xfa8e23, timestamp = datetime.utcnow()))
 				else:
-					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which country does this flag belong to?: \nReal Answer: `{quizans["name"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
+					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which {"country" if ccfixed else "territory"} does this flag belong to?: \nReal Answer: `{quizans["name"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
 
 			else: 
 				with open('lb.json', 'r+') as f:
