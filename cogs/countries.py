@@ -6,7 +6,7 @@ import discord
 from datetime import datetime
 import asyncio
 import json
-import unidecode
+from unidecode import unidecode
 from re import sub
 global amounts
 try:
@@ -60,15 +60,16 @@ class Countries(commands.Cog):
 			
 			quizans=data[random.randint(0,len(data)-1)]
 			ccfixed = quizans["capital"]
-			nnfixed = unidecode.unidecode(quizans["name"])
+			nnfixed = unidecode(quizans["name"])
 			if t == 1 and ccfixed:
 				t="capital"
 				if quizans["capital"] == "City of San Marino": 	quizans["capital"]=qex="San Marino"
 				else: qex=ccfixed
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
-				ccfixed = unidecode.unidecode(ccfixed)
+				ccfixed = unidecode(ccfixed)
 			else:
-				if random.randint(1,7) == 7: 
+				# if random.randint(1,17) == 7: 
+				if 7 == 7:
 					quizans=altdata[random.randint(0,len(altdata)-1)]
 					tc=1
 				else:tc=2
@@ -77,7 +78,7 @@ class Countries(commands.Cog):
 			em = await channel.send(embed=msem)	
 			qqqq = quizans[t]
 			def check(message : discord.Message) -> bool: 
-				content = sub(r"[\d\?\!./]",'',unidecode.unidecode(message.content).strip().lower())
+				content = sub(r"[\d\?\!./]",'',unidecode(message.content).strip().lower())
 				if content == "usa": content = "United States" 
 				if content == "uae": content = "United Arab Emirates"
 				if content == "uk": content = "United Kingdom"
@@ -101,14 +102,14 @@ class Countries(commands.Cog):
 				if content == "tl": content =  "Timor-Leste"
 				if content == "nc": content =  "New Caledonia"
 				if content == "spm": content =  "Saint Pierre and Miquelon"
-				return message.channel == channel and message.author != self.bot and (unidecode.unidecode(content).lower().replace("-", " ").replace("'", "") == unidecode.unidecode(qqqq).lower().replace("-", " ").replace("'", "")) #or unidecode.unidecode(content).lower() == unidecode.unidecode(qex))
+				return message.channel == channel and message.author != self.bot and (unidecode(content).lower().replace("-", " ").replace("'", "") == unidecode(qqqq).lower().replace("-", " ").replace("'", ""))
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
-				if t == "capital": 
+				if t == "capital":
 					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'What is the capital of `{quizans["name"]}:` \nReal Answer: `{quizans["capital"]}`',color=0xfa8e23, timestamp = datetime.utcnow()))
 				else:
-					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which {"country" if ccfixed else "territory"} does this flag belong to?: \nReal Answer: `{quizans["name"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
+					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which {"country" if tc==2 else "territory"} does this flag belong to?: \nReal Answer: `{quizans["name"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
 
 			else: 
 				with open('lb.json', 'r+') as f:
