@@ -59,7 +59,7 @@ bot.load_extension("cogs.countries")
 bot.load_extension("cogs.moderation")
 bot.load_extension("cogs.reports")
 bot.load_extension("cogs.eval")
-bot.load_extension("cogs.quiz")
+
 load_dotenv()
 token = os.environ.get("TOKEN")
 bot.run(token)
