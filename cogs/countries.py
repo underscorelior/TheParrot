@@ -23,7 +23,7 @@ class Countries(commands.Cog):
 		self.bot = bot
 		self.countries.start()
 	global xpgain
-	xpgain=2
+	xpgain=1
 	@commands.command(aliases=["lb"])
 	async def leaderboard(self,ctx):
 		guild=self.bot.get_guild(722086066596741144)
