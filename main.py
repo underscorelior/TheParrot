@@ -8,10 +8,11 @@ from utils import userembed, waitembed, infoembed, modembed
 from dotenv import load_dotenv
 
 bot = commands.Bot(
-    command_prefix=["p-", "P-"],
+    # Hyphen, en-dash and em-dash
+    command_prefix=["p-", "P-", "p–", "P–", "p—", "P—"],
     intents=discord.Intents.all(),
-    status=discord.Status.idle,
-    activity=discord.Game(name="With The Bread Pirate's crackers.")
+    status=discord.Status.online,
+    activity=discord.Game(name="with The Bread Pirate's crackers.")
 )
 
 
