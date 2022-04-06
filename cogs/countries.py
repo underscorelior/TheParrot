@@ -112,6 +112,7 @@ class Countries(commands.Cog):
 				if content == "biot": content =  "British Indian Ocean Territory"
 				if content == "cki": content =  "Cocos (Keeling) Islands"
 				if content == "nmi": content =  "Northern Mariana Islands"
+				if content == "tci": content = "Turks and Caicos Islands"
 					
 				# Capitals
 				if content == "dc": content =  "Washington, D.C."
