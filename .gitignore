@@ -112,7 +112,7 @@ config.toml
 
 # logs
 *.log
-
+quizlb.json
 *.exe
 test.py
 web_screenshot.png 
