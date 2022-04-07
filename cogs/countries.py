@@ -17,6 +17,11 @@ try:
 		amounts = json.load(f)
 except FileNotFoundError:
 	print("Could not load amounts.json")
+
+	
+def _parse_(content: str) -> str:
+	return sub(r"[\d\?\!.,/\']","",unidecode(message.content).strip().lower()).replace("-", " ")
+	
 class Countries(commands.Cog):
 	def __init__(self, bot):
 		self.index = 0
@@ -80,7 +85,7 @@ class Countries(commands.Cog):
 			em = await channel.send(embed=msem)	
 			qqqq = quizans[t]
 			def check(message : discord.Message) -> bool: 
-				content = sub(r"[\d\?\!./]",'',unidecode(message.content).strip().lower())
+				content = _parse_(message.content)
 				if content == "usa": content = "United States" 
 				if content == "uae": content = "United Arab Emirates"
 				if content == "uk": content = "United Kingdom"
@@ -104,7 +109,19 @@ class Countries(commands.Cog):
 				if content == "tl": content =  "Timor-Leste"
 				if content == "nc": content =  "New Caledonia"
 				if content == "spm": content =  "Saint Pierre and Miquelon"
-				return message.channel == channel and message.author != self.bot and (unidecode(content).lower().replace("-", " ").replace("'", "") == unidecode(qqqq).lower().replace("-", " ").replace("'", ""))
+				if content == "biot": content =  "British Indian Ocean Territory"
+				if content == "cki": content =  "Cocos (Keeling) Islands"
+				if content == "nmi": content =  "Northern Mariana Islands"
+				if content == "tci": content = "Turks and Caicos Islands"
+					
+				# Capitals
+				if content == "dc": content =  "Washington, D.C."
+				
+				
+				
+				
+				
+				return message.channel == channel and message.author != self.bot and (content == _parse_(qqqq))
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
