@@ -33,7 +33,7 @@ class Countries(commands.Cog):
 	async def leaderboard(self,ctx):
 		guild=self.bot.get_guild(722086066596741144)
 		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds! https://github.com/underscorelior/TheParrot"))
-		if channel.id == ctx.channel.id or ctx.channel.id == 954989125696618496:
+		if channel.id == ctx.channel.id or ctx.channel.id == 955169257711370280:
 			with open('quizlb.json', 'r') as f:
 				data = json.load(f)
 			top_users = {k: v for k, v in sorted(data.items(), key=lambda item: item[1], reverse=True)}
