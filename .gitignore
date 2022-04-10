@@ -116,4 +116,5 @@ quizlb.json
 *.exe
 test.py
 web_screenshot.png 
+quizlb.json
 lb.json
