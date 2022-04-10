@@ -116,6 +116,7 @@ class Countries(commands.Cog):
 					
 				# Capitals
 				if qqqq == "washington dc": cnt = "dc"
+				else: cnt=qqqq
 				
 				return message.channel == channel and message.author != self.bot and (content == _parse_(qqqq) or content == _parse_(cnt))
 			try:
