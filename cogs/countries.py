@@ -20,7 +20,7 @@ except FileNotFoundError:
 
 	
 def _parse_(content: str) -> str:
-	return sub(r"[\d\?\!.,/\']","",unidecode(content).lower()).replace("-", " ")
+	return unidecode(content).lower().replace("-", "").replace(".","").replace(",","").replace("(","").replace(")","")
 	
 class Countries(commands.Cog):
 	def __init__(self, bot):
@@ -83,41 +83,41 @@ class Countries(commands.Cog):
 				t = "name"
 				msem = discord.Embed(title=f'Which {"country" if tc==2 else "territory"} does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
-			qqqq = quizans[t]
+			qqqq = _parse_(quizans[t])
 			def check(message : discord.Message) -> bool: 
 				content = _parse_(message.content)
-				if content == "usa": content = "United States" 
-				if content == "uae": content = "United Arab Emirates"
-				if content == "uk": content = "United Kingdom"
-				if content == "nk": content = "North Korea"
-				if content == "sk": content = "South Korea"
-				if content == "nz": content =  "New Zealand"
-				if content == "roc": content =  "Republic of the Congo"
-				if content == "drc": content =  "DR Congo"
-				if content == "dr": content =  "Dominican Republic"
-				if content == "svg": content =  "Saint Vincent and the Grenadines"
-				if content == "png": content =  "Papua New Guinea"
-				if content == "ab": content =  "Antigua and Barbuda"
-				if content == "sa": content =  "Saudi Arabia"
-				if content == "sl": content =  "Sierra Leone"
-				if content == "tt": content =  "Trinidad and Tobago"
-				if content == "bh": content =  "Bosnia and Herzegovina"
-				if content == "skn": content =  "Saint Kitts and Nevis"
-				if content == "stp": content =  "São Tomé and Príncipe"
-				if content == "car": content =  "Central African Republic"
-				if content == "gb": content =  "Guinea-Bissau"
-				if content == "tl": content =  "Timor-Leste"
-				if content == "nc": content =  "New Caledonia"
-				if content == "spm": content =  "Saint Pierre and Miquelon"
-				if content == "biot": content =  "British Indian Ocean Territory"
-				if content == "cki": content =  "Cocos (Keeling) Islands"
-				if content == "nmi": content =  "Northern Mariana Islands"
-				if content == "tci": content = "Turks and Caicos Islands"
+				if qqqq == "united states": cnt ="usa" 
+				if qqqq == "united arab emirates": cnt ="uae"
+				if qqqq == "united kingdom": cnt ="uk"
+				if qqqq == "north Korea": cnt ="nk"
+				if qqqq == "south kore": cnt ="sk"
+				if qqqq == "new zealand": cnt = "nz"
+				if qqqq == "republic of the congo": cnt = "roc"
+				if qqqq == "dr congo": cnt = "drc"
+				if qqqq == "dominican republic": cnt = "dr"
+				if qqqq == "saint vincent and the grenadines": cnt = "svg"
+				if qqqq == "papua new guinea": cnt = "Papua New Guinea"
+				if qqqq == "antigua and barbuda": cnt = "ab"
+				if qqqq == "saudi arabia": cnt = "sa"
+				if qqqq == "sierra leone": cnt = "sl"
+				if qqqq == "trinidad and tobago": cnt = "tt"
+				if qqqq == "bosnia and herzegovina": cnt = "bh"
+				if qqqq == "saint kitts and nevis": cnt = "skn"
+				if qqqq == "sao tome and principe": cnt = "stp"
+				if qqqq == "central african republic": cnt = "car"
+				if qqqq == "guineabissau": cnt = "gb"
+				if qqqq == "timorleste": cnt = "tl"
+				if qqqq == "new caledonia": cnt = "nc"
+				if qqqq == "saint pierre and miquelon": cnt = "spm"
+				if qqqq == "british indian ocean territory": cnt = "biot"
+				if qqqq == "cocos keeling islands": cnt = "cki"
+				if qqqq == "northern mariana islands": cnt = "nmi"
+				if qqqq == "turks and caicos islands": cnt ="tci"
 					
 				# Capitals
-				if content == "dc": content =  "Washington, D.C."
+				if qqqq == "washington dc": cnt = "dc"
 				
-				return message.channel == channel and message.author != self.bot and content == _parse_(qqqq)
+				return message.channel == channel and message.author != self.bot and (content == _parse_(qqqq) or content == _parse_(cnt))
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
