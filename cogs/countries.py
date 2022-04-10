@@ -20,7 +20,7 @@ except FileNotFoundError:
 
 	
 def _parse_(content: str) -> str:
-	return sub(r"[\d\?\!.,/\']","",unidecode(content).strip().lower()).replace("-", " ")
+	return sub(r"[\d\?\!.,/\']","",unidecode(content).lower()).replace("-", " ")
 	
 class Countries(commands.Cog):
 	def __init__(self, bot):
@@ -117,7 +117,7 @@ class Countries(commands.Cog):
 				# Capitals
 				if content == "dc": content =  "Washington, D.C."
 				
-				return message.channel == channel and message.author != self.bot and (content == _parse_(qqqq))
+				return message.channel == channel and message.author != self.bot and content == _parse_(qqqq)
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
