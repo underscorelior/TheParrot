@@ -20,7 +20,11 @@ except FileNotFoundError:
 
 	
 def _parse_(content: str) -> str:
-	return unidecode(content).lower().replace("-", "").replace(".","").replace(",","").replace("(","").replace(")","")
+	_c_ = unidecode(content).lower()
+	for char in "123457890()'!\"?.,":
+		_c_ = _c_.replace(char, '')
+	return _c_.strip()
+
 	
 class Countries(commands.Cog):
 	def __init__(self, bot):
@@ -67,14 +71,12 @@ class Countries(commands.Cog):
 				async with session.get("https://komali.dev/bin/territories.json", ssl=False) as f: altdata = await f.json()
 			
 			quizans=data[random.randint(0,len(data)-1)]
-			ccfixed = quizans["capital"]
-			nnfixed = unidecode(quizans["name"])
-			if t == 1 and ccfixed:
+
+			if t == 1 and quizans["capital"]:
 				t="capital"
 				if quizans["capital"] == "City of San Marino": 	quizans["capital"]=qex="San Marino"
-				else: qex=ccfixed
+				else: qex=quizans["capital"]
 				msem = discord.Embed(title=f'What is the capital of `{quizans["name"]}`:',color=0x1860cc, timestamp = datetime.utcnow())
-				ccfixed = unidecode(ccfixed)
 			else:
 				if random.randint(1,17) == 7: 
 					quizans=altdata[random.randint(0,len(altdata)-1)]
@@ -83,49 +85,66 @@ class Countries(commands.Cog):
 				t = "name"
 				msem = discord.Embed(title=f'Which {"country" if tc==2 else "territory"} does this flag belong to?',color=0x1860cc, timestamp = datetime.utcnow()).set_image(url=quizans["flags"])
 			em = await channel.send(embed=msem)	
-			qqqq = _parse_(quizans[t])
+			qqqq = quizans[t]
+			
+			if isinstance(qqqq, str): qqqq = [_parse_(qqqq)]
+			else: qqqq = [_parse_(x) for x in qqqq]
 			def check(message : discord.Message) -> bool: 
 				content = _parse_(message.content)
-				if qqqq == "united states": cnt ="usa" 
-				elif qqqq == "united arab emirates": cnt ="uae"
-				elif qqqq == "united kingdom": cnt ="uk"
-				elif qqqq == "north Korea": cnt ="nk"
-				elif qqqq == "south kore": cnt ="sk"
-				elif qqqq == "new zealand": cnt = "nz"
-				elif qqqq == "republic of the congo": cnt = "roc"
-				elif qqqq == "dr congo": cnt = "drc"
-				elif qqqq == "dominican republic": cnt = "dr"
-				elif qqqq == "saint vincent and the grenadines": cnt = "svg"
-				elif qqqq == "papua new guinea": cnt = "Papua New Guinea"
-				elif qqqq == "antigua and barbuda": cnt = "ab"
-				elif qqqq == "saudi arabia": cnt = "sa"
-				elif qqqq == "sierra leone": cnt = "sl"
-				elif qqqq == "trinidad and tobago": cnt = "tt"
-				elif qqqq == "bosnia and herzegovina": cnt = "bh"
-				elif qqqq == "saint kitts and nevis": cnt = "skn"
-				elif qqqq == "sao tome and principe": cnt = "stp"
-				elif qqqq == "central african republic": cnt = "car"
-				elif qqqq == "guineabissau": cnt = "gb"
-				elif qqqq == "timorleste": cnt = "tl"
-				elif qqqq == "new caledonia": cnt = "nc"
-				elif qqqq == "saint pierre and miquelon": cnt = "spm"
-				elif qqqq == "british indian ocean territory": cnt = "biot"
-				elif qqqq == "cocos keeling islands": cnt = "cki"
-				elif qqqq == "northern mariana islands": cnt = "nmi"
-				elif qqqq == "turks and caicos islands": cnt ="tci"
+				for q in qqqq:
+					if q == "united states": cnt ="usa" 
+					elif q == "united arab emirates": cnt ="uae"
+					elif q == "united kingdom": cnt ="uk"
+					elif q == "north Korea": cnt ="nk"
+					elif q == "south kore": cnt ="sk"
+					elif q == "new zealand": cnt = "nz"
+					elif q == "republic of the congo": cnt = "roc"
+					elif q == "dr congo": cnt = "drc"
+					elif q == "dominican republic": cnt = "dr"
+					elif q == "saint vincent and the grenadines": cnt = "svg"
+					elif q == "papua new guinea": cnt = "png"
+					elif q == "antigua and barbuda": cnt = "ab"
+					elif q == "saudi arabia": cnt = "sa"
+					elif q == "sierra leone": cnt = "sl" 
+					elif q == "trinidad and tobago": cnt = "tt"
+					elif q == "bosnia and herzegovina": cnt = "bh"
+					elif q == "saint kitts and nevis": cnt = "skn"
+					elif q == "sao tome and principe": cnt = "stp"
+					elif q == "central african republic": cnt = "car"
+					elif q == "guineabissau": cnt = "gb"
+					elif q == "timorleste": cnt = "tl"
+					elif q == "north macedonia": cnt = "nm"
+
+					#Territories 
+
+					elif q == "new caledonia": cnt = "nc"
+					elif q == "saint helena": cnt = "sh"
+					elif q == "saint pierre and miquelon": cnt = "spm"
+					elif q == "british indian ocean territory": cnt = "biot"
+					elif q == "cocos keeling islands": cnt = "cki"
+					elif q == "northern mariana islands": cnt = "nmi"
+					elif q == "turks and caicos islands": cnt ="tci"
+					elif q == "british virgin islands": cnt = "bvi"
+					elif q == "us virgin islands": cnt = "uvi"
+					elif q == "french polynesia": cnt = "fp"
+					elif q == "saint barthelemy": cnt = "sb"
+					elif q == "american samoa": cnt = "as"
 					
-				# Capitals
-				elif qqqq == "washington dc": cnt = "dc"
-				else: cnt=qqqq
-				
-				return message.channel == channel and message.author != self.bot and (content == _parse_(qqqq) or content == _parse_(cnt))
+					# Capitals
+
+					elif q == "washington dc": cnt = "dc"
+					elif q == "ulaanbaatar": cnt = "ulan bator"
+					else: cnt=q
+				check1 = message.channel == channel and message.author != self.bot
+				check2 = content in qqqq or content == cnt
+				return check1 and check2
 			try:
 				message = await self.bot.wait_for('message', timeout = 12.5, check = check)
 			except asyncio.TimeoutError: 
 				if t == "capital":
-					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'What is the capital of `{quizans["name"]}:` \nReal Answer: `{quizans["capital"]}`',color=0xfa8e23, timestamp = datetime.utcnow()))
+					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'What is the capital of `{quizans["capital"]}:` \nReal Answer: `{quizans["capital"] if isinstance(quizans["capital"], str) else "/".join(quizans["capital"])}`',color=0xfa8e23, timestamp = datetime.utcnow()))#
 				else:
-					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which {"country" if tc==2 else "territory"} does this flag belong to?: \nReal Answer: `{quizans["name"]}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
+					await em.edit(embed=discord.Embed(title="No one answered correctly!",description=f'Which {"country" if tc==2 else "territory"} does this flag belong to?: \nReal Answer: `{quizans["name"] if isinstance(quizans["name"], str) else "/".join(quizans["name"])}`',color=0xfa8e23, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]))
 
 			else: 
 				with open('quizlb.json', 'r+') as f:
@@ -149,8 +168,8 @@ You are officially a [1;33m[1;40mnerd![0m You gain the [1;34m[1;40m@Oceanog
 					await member.add_roles(role)
 					await self.bot.get_channel(808448077614415882).send(f"New <@&954556452087922730>! \nGGs to {message.author.mention} for getting 1000 countries/flags correct!")
 				await message.add_reaction("✅")
-				if t == "capital": await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
-				else: await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'Which {"country" if tc==2 else "territory"} does this flag belong to? \nAnswer: `{quizans["name"]}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
+				if t == "capital": await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'What is the capital of `{quizans["name"]}`: \nAnswer: `{quizans["capital"] if isinstance(quizans["capital"], str) else "/".join(quizans["capital"])}`', color=0x3cb556, timestamp = datetime.utcnow()).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
+				else: await em.edit(embed=discord.Embed(title=f'{message.author} answered correctly!',description=f'Which {"country" if tc==2 else "territory"} does this flag belong to? \nAnswer: `{quizans["name"] if isinstance(quizans["name"], str) else "/".join(quizans["name"])}`', color=0x3cb556, timestamp = datetime.utcnow()).set_thumbnail(url=quizans["flags"]).set_author(name=message.author,icon_url=message.author.avatar_url).set_footer(text=f"They have a total of {totals} point(s)!"))
 
 			finally: 
 				print("Done")
@@ -192,7 +211,7 @@ You are officially a [1;33m[1;40mnerd![0m You gain the [1;34m[1;40m@Oceanog
 		await self.bot.wait_until_ready()
 
 def _save():
-    with open('quizlb.json', 'w+') as f:
-        json.dump(amounts, f)
+	with open('quizlb.json', 'w+') as f:
+		json.dump(amounts, f)
 def setup(bot):
 	bot.add_cog(Countries(bot))
