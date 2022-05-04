@@ -44,7 +44,7 @@ shortdict = {
 	"dominicanrepublic": "dr",
 	"saintvincentandthegrenadines": "svg",
 	"papuanewguinea": "png",
-	"atiguaandbarbuda": "ab",
+	"antiguaandbarbuda": "ab",
 	"saudiarabia": "sa",
 	"trinidadandtobago": "tt",
 	"bosniaandherzegovina": "bh",
