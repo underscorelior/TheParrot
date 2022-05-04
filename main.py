@@ -56,6 +56,7 @@ async def on_message(message):
 
 bot.load_extension("jishaku")
 bot.load_extension("cogs.countries")
+bot.load_extension("cogs.quiz")
 bot.load_extension("cogs.moderation")
 bot.load_extension("cogs.reports")
 bot.load_extension("cogs.eval")
