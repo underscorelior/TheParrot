@@ -95,7 +95,7 @@ class Countries(commands.Cog):
 			embed.add_field(name="Names", value=names, inline=False)
 			await ctx.send(embed=embed)
 
-	@tasks.loop(seconds=5)
+	@tasks.loop(seconds=15)
 	async def countries(self):
 		guild=self.bot.get_guild(722086066596741144)
 		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds! https://github.com/underscorelior/TheParrot"))
