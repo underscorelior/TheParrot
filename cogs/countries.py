@@ -70,7 +70,9 @@ shortdict = {
 	"americansamoa": "as",
 	# capitals
 	"washingtondc": "dc",
+	# secondary spellings
 	"ulaanbaatar": "ulanbator",
+	"macao": "macau",
 }
 
 
