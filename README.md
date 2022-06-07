@@ -6,6 +6,8 @@ A minimal and refined ticket system, with userinfo, anonymous replies, and more.
 
 A feature packed reporting system, with mod approval.
 
+A fun channel based quiz game.
+
 ## Libraries
 - discord.py v1.7.3
 - discord-py-slash-commands
