@@ -196,5 +196,5 @@ def _save():
         json.dump(points, f)
 
 
-def setup(bot):
-    bot.add_cog(Quiz(bot))
+async def setup(bot):
+    await bot.add_cog(Quiz(bot))

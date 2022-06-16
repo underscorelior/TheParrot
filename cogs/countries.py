@@ -80,7 +80,6 @@ class Countries(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.countries.start()
-
 	@commands.command(aliases=["lb"])
 	async def leaderboard(self, ctx):
 		if ctx.channel.id == 954557457131266059 or ctx.channel.id == 955169257711370280:
@@ -101,11 +100,12 @@ class Countries(commands.Cog):
 	async def countries(self):
 		guild=self.bot.get_guild(722086066596741144)
 		channel = get(guild.text_channels, topic=str("Country quiz, new game starts every 15 seconds! https://github.com/underscorelior/TheParrot"))
-		for message in await channel.history(limit=15, oldest_first=False).flatten():
+		for message in [x async for x in channel.history(limit=15, oldest_first=False)]:
 			if message.author.id != self.bot.user.id:
 				msgtime = message.created_at.timestamp()
+				print((int(datetime.utcnow().timestamp())-int(msgtime))-25200)
 				break
-		if (msgtime - datetime.utcnow().timestamp()) >= -60:
+		if (int(datetime.utcnow().timestamp())-int(msgtime))-25200 <= 60:
 			async with aiohttp.ClientSession() as session:
 				async with session.get("https://underscore.wtf/countries/countries.json", ssl=False) as r:
 					data = await r.json()
@@ -183,7 +183,7 @@ class Countries(commands.Cog):
 					_save()
 				totals = points[str(message.author.id)]
 				if totals == 1000:
-					if str(message.author.mobile_status) != "offline":
+					if str(message.author.mobile_status).lower() != "offline":
 						await message.author.send(
 							embed=discord.Embed(
 								title=f"{message.author.name} congratulations on reaching 1000 xp!",
@@ -249,5 +249,5 @@ def _save():
 		json.dump(points, f)
 
 
-def setup(bot):
-	bot.add_cog(Countries(bot))
+async def setup(bot):
+	await bot.add_cog(Countries(bot))

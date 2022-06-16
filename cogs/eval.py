@@ -102,5 +102,5 @@ class Eval(commands.Cog):
 				else:
 						await ctx.message.add_reaction('\u2705')
 	
-def setup(bot):
-		bot.add_cog(Eval(bot))
+async def setup(bot):
+		await bot.add_cog(Eval(bot))

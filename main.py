@@ -3,9 +3,10 @@ import os
 import time
 from discord.utils import get
 from discord.ext import commands
-from discord_components import DiscordComponents
+# from discord_components import DiscordComponents
 from utils import userembed, waitembed, infoembed, modembed
 from dotenv import load_dotenv
+import markovify
 
 bot = commands.Bot(
     command_prefix=["p-", "P-"],
@@ -14,12 +15,14 @@ bot = commands.Bot(
     activity=discord.Game(name="With The Bread Pirate's crackers.")
 )
 
-
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user.name} at {time.ctime()}")
-    DiscordComponents(bot)
-
+    await bot.load_extension("jishaku")
+    await bot.load_extension("cogs.countries")
+    # await bot.load_extension("cogs.quiz")
+    await bot.load_extension("cogs.moderation")
+    await bot.load_extension("cogs.eval")
 
 @bot.event
 async def on_message(message):
@@ -54,12 +57,14 @@ async def on_message(message):
         else:
             await userembed(user, message, channel)
 
-bot.load_extension("jishaku")
-bot.load_extension("cogs.countries")
-bot.load_extension("cogs.quiz")
-bot.load_extension("cogs.moderation")
-bot.load_extension("cogs.reports")
-bot.load_extension("cogs.eval")
+@bot.command()
+@commands.cooldown(1, 2, commands.BucketType.user)
+async def breadspeak(ctx):
+    if ctx.channel.id == 899886160204156928:
+        try:
+            await ctx.send(markovify.Text(open("dataset.txt", encoding="utf-8").read()).make_short_sentence(140))
+        except Exception as e:
+            await ctx.reply(e)
 
 load_dotenv()
 token = os.environ.get("TOKEN")
