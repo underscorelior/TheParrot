@@ -1,6 +1,5 @@
 import discord
 from datetime import datetime
-from discord.errors import HTTPException
 
 
 async def infoembed(message, channel, guild):
