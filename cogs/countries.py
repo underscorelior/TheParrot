@@ -3,9 +3,6 @@ from datetime import UTC, datetime
 import random
 import aiohttp
 import discord
-from dotenv import load_dotenv
-import psycopg2
-import os
 from discord.ext import commands, tasks
 
 from utils import (
@@ -20,11 +17,6 @@ from utils import (
     update_score,
     win_embed,
 )
-
-load_dotenv()
-
-connection_string = os.getenv("NEON_URL")
-conn = psycopg2.connect(connection_string)
 
 
 class Countries(commands.Cog):
@@ -97,7 +89,7 @@ class Countries(commands.Cog):
                 await game.edit(embed=embed)
             else:
                 await message.add_reaction("✅")
-                player_score = update_score(message.author.id, conn)
+                player_score = update_score(message.author.id)
 
                 embed = win_embed(
                     answer_dict,

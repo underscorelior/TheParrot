@@ -1,8 +1,15 @@
 from datetime import UTC, datetime
+import os
 from re import sub
+from dotenv import load_dotenv
+import psycopg2
 
 import discord
 from unidecode import unidecode
+
+load_dotenv()
+
+DB_URL = os.getenv("NEON_URL")
 
 POINT_GAIN = 1
 
@@ -109,7 +116,9 @@ def no_answer_embed(answer, question_type, state_type):
     return embed
 
 
-def update_score(id, conn):
+def update_score(id):
+    conn = psycopg2.connect(DB_URL)
+
     cur = conn.cursor()
     cur.execute(f"SELECT id FROM parrot WHERE id = {id}")
     if cur.fetchall():
@@ -123,6 +132,7 @@ def update_score(id, conn):
 
     cur.close()
     conn.commit()
+    conn.close()
 
     return totals
 
