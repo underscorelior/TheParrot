@@ -175,3 +175,32 @@ def win_embed(
         )
 
     return embed
+
+
+def leaderboard():
+    conn = psycopg2.connect(DB_URL)
+
+    cur = conn.cursor()
+    cur.execute(
+        """
+                select
+  *
+from
+  parrot
+order by
+  score desc
+limit
+  15;"""
+    )
+    data = cur.fetchall()
+    names = ""
+    scores = ""
+    # for i in range(len(data)):
+    #     names += f"{i+1} - <@!{data[i][0]}> | {data[i][1]}\n"
+    for i in range(len(data)):
+        names += f"`{i+1}`. <@!{data[i][0]}>\n"
+        scores += f"`{data[i][1]}`\n"
+    embed = discord.Embed(title="Top 15 Players: ")
+    embed.add_field(name="Name", value=names, inline=True)
+    embed.add_field(name="Score", value=scores, inline=True)
+    return embed

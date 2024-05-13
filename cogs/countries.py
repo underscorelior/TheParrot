@@ -16,6 +16,7 @@ from utils import (
     starting_embed,
     update_score,
     win_embed,
+    leaderboard,
 )
 
 
@@ -26,7 +27,10 @@ class Countries(commands.Cog):
 
     @commands.command(aliases=["lb"])
     async def leaderboard(self, ctx: commands.Context[commands.Bot]):
-        pass
+        if ctx.channel.id == 954557457131266059 or ctx.channel.id == 955169257711370280:
+            embed = leaderboard()
+
+            await ctx.send(embed=embed)
 
     @tasks.loop(seconds=15)
     async def countries(self):
