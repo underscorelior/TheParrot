@@ -1,0 +1,6 @@
+discord.py
+jishaku
+aiohttp
+psycopg2-binary
+python-dotenv
+unidecode
