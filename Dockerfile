@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python
 COPY requirements.txt /requirements.txt
 COPY main.py /main.py
 COPY cogs/ /cogs/
