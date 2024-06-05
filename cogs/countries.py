@@ -27,7 +27,11 @@ class Countries(commands.Cog):
 
     @commands.command(aliases=["lb"])
     async def leaderboard(self, ctx: commands.Context[commands.Bot]):
-        if ctx.channel.id == 954557457131266059 or ctx.channel.id == 955169257711370280:
+        if (
+            ctx.channel.id == 954557457131266059
+            or ctx.channel.id == 955169257711370280
+            or ctx.channel.id == 1248034182345527388
+        ):
             embed = leaderboard()
 
             await ctx.send(embed=embed)
@@ -36,7 +40,7 @@ class Countries(commands.Cog):
     async def countries(self):
         channel: discord.guild.GuildChannel = self.bot.get_channel(CHANNEL_ID)
         last_message = False
-        for message in [x async for x in channel.history(limit=5, oldest_first=False)]:
+        for message in [x async for x in channel.history(limit=3, oldest_first=False)]:
             if message and message.author.id != self.bot.user.id:
                 last_message = True
                 break
