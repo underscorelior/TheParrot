@@ -154,7 +154,7 @@ def win_embed(
             )
             .set_thumbnail(url=answer["flags"])
             .set_author(name=player, icon_url=player.display_avatar)
-            .set_footer(text=f"They have a total of {score} point(s)!")
+            .set_footer(text=f"They have a total of {score} point{""if score == 1 else"s"}!")
         )
     else:
         capital = (
@@ -171,7 +171,7 @@ def win_embed(
                 timestamp=datetime.now(UTC),
             )
             .set_author(name=player, icon_url=player.display_avatar)
-            .set_footer(text=f"They have a total of {score} point(s)!")
+            .set_footer(text=f"They have a total of {score} point{""if score == 1 else"s"}!")
         )
 
     return embed
