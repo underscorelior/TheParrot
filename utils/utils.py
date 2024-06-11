@@ -44,6 +44,7 @@ shortdict = {
     "saotomeandprincipe": "stp",
     "saintkittsandnevis": "skn",
     "centralafricanrepublic": "car",
+    "timorleste": "easttimor",
     # "guineabissau": "gb",
     # "timorleste": "tl",
     # "northmacedonia": "nm",
